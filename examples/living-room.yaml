@@ -1,0 +1,14 @@
+type: custom:titan-climate-card
+name: Гостиная
+temperature_entity: sensor.gostinaia_klimat_temperatura
+humidity_entity: sensor.gostinaia_klimat_vlazhnost
+# battery_entity: sensor.gostinaia_klimat_battery
+precision: 1
+show_sparkline: true
+show_last_updated: true
+animations: full
+leds_enabled: true
+led_brightness: 0.7
+background_opacity: 0
+background_blur: 0
+body_opacity: 1

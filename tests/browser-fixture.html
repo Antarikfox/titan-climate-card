@@ -1,0 +1,34 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>TITAN Integration QA</title><style>body{background:#12161b;color:#ffd7a1;font:16px monospace}titan-climate-card{width:900px}.mobile{width:390px}pre{white-space:pre-wrap}button{padding:12px}</style><h1>Integration QA</h1><pre id="results">Running…</pre><div id="cards"></div><script src="titan-climate-card.js"></script><script>
+(async()=>{
+const out=[],check=(name,value)=>{out.push((value?'PASS ':'FAIL ')+name);document.getElementById('results').textContent=out.join('\n');if(!value)throw Error(name);};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let requests=0,info=null,configEvents=0;
+const now=Date.now(),states={
+'sensor.temp':{state:'72.5',attributes:{unit_of_measurement:'°F'},last_updated:new Date(now).toISOString()},
+'sensor.hum':{state:'48',attributes:{unit_of_measurement:'%'},last_updated:new Date(now).toISOString()},
+'sensor.battery':{state:'84',attributes:{},last_updated:new Date(now).toISOString()}
+};
+const hass={states,callApi:async(method,url)=>{requests++;const isTemp=url.includes('sensor.temp');return [[{state:isTemp?'70':'45',last_changed:new Date(now-86400000).toISOString()},{state:isTemp?'72.5':'48',last_changed:new Date(now-300000).toISOString()}]];}};
+const card=document.createElement('titan-climate-card');card.setConfig({name:'Очень длинная гостиная',temperature_entity:'sensor.temp',humidity_entity:'sensor.hum',battery_entity:'sensor.battery'});card.hass=hass;document.getElementById('cards').append(card);await sleep(1800);
+const root=card.shadowRoot;
+check('Fahrenheit value and converted comfort status',root.getElementById('temperature').textContent==='72.5°F'&&root.getElementById('status').textContent==='ГОМЕОСТАЗ');
+check('two entity history requests',requests===2);
+check('real history renders finite smooth paths',root.getElementById('line0').getAttribute('d').includes('L')&&!root.getElementById('line0').getAttribute('d').includes('NaN'));
+check('LED layers are visible with staggered long intervals',getComputedStyle(root.querySelector('.led-bank')).display!=='none'&&new Set([...root.querySelectorAll('.led')].map(el=>getComputedStyle(el).animationDuration)).size>3);
+for(let i=0;i<10;i++)card.hass=hass;check('history cache avoids duplicate queries',requests===2);
+card.addEventListener('hass-more-info',e=>info=e.detail.entityId);root.querySelector('.temp').click();await sleep(300);check('temperature tap opens its entity',info==='sensor.temp');
+states['sensor.temp']={...states['sensor.temp'],state:'unavailable'};card.hass=hass;await sleep(60);check('unavailable has dash and signal state',root.getElementById('temperature').textContent==='—'&&root.getElementById('status').textContent==='СИГНАЛ ПОТЕРЯН');
+states['sensor.temp']={...states['sensor.temp'],state:'75.5'};card.hass=hass;await sleep(1500);check('recovery updates current value',root.getElementById('temperature').textContent==='75.5°F');
+card.setAppearance({background_opacity:.45,body_opacity:.6,led_brightness:.4});
+check('background opacity applied without losing history',getComputedStyle(card.shadowRoot.querySelector('.stage')).backgroundColor.includes('0.45')&&card.shadowRoot.getElementById('line0').getAttribute('d').includes('L'));
+check('body opacity does not fade readouts',getComputedStyle(card.shadowRoot.querySelector('.backplate')).opacity==='0.6'&&getComputedStyle(card.shadowRoot.querySelector('.readouts')).opacity==='1');
+card.setAppearance({background_opacity:0});check('default background truly transparent',getComputedStyle(card.shadowRoot.querySelector('.stage')).backgroundColor==='rgba(12, 17, 24, 0)'&&getComputedStyle(card.shadowRoot.querySelector('.stage')).backgroundImage==='none');
+card.setAppearance({leds_enabled:false});check('LED switch hides animated lighting',getComputedStyle(card.shadowRoot.querySelector('.led-bank')).display==='none');
+card.setAppearance({leds_enabled:true,animations:'off'});await sleep(100);check('off mode stops LED animation',getComputedStyle(card.shadowRoot.querySelector('.led')).animationName==='none');
+const mobile=document.createElement('titan-climate-card');mobile.className='mobile';mobile.setConfig({name:'Спальня',demo:true,animations:'full'});document.getElementById('cards').append(mobile);mobile.setDemo(22.5,48);await sleep(100);check('390px layout has no horizontal overflow',mobile.shadowRoot.querySelector('.stage').getBoundingClientRect().width<=391);
+const editor=document.createElement('titan-climate-editor');editor.setConfig({temperature_entity:'sensor.temp',humidity_entity:'sensor.hum'});editor.hass=hass;document.getElementById('cards').append(editor);editor.addEventListener('config-changed',()=>configEvents++);editor.setConfig({temperature_entity:'sensor.temp',humidity_entity:'sensor.hum'});const input=editor.shadowRoot.querySelector('[data-key="name"]');input.value='Тест';input.dispatchEvent(new Event('change',{bubbles:true}));check('editor emits exactly one change after rerender',configEvents===1);
+mobile.remove();check('disconnect cancels animation and timer',!mobile._raf&&!mobile._connected);
+const noHistory=document.createElement('titan-climate-card');noHistory.setConfig({temperature_entity:'sensor.temp',humidity_entity:'sensor.hum'});noHistory.hass={states,callApi:async()=>{throw Error('recorder disabled')}};document.getElementById('cards').append(noHistory);await sleep(100);check('missing recorder remains readable',noHistory.shadowRoot.getElementById('temperature').textContent==='75.5°F'&&noHistory.shadowRoot.getElementById('empty0').style.display!=='none');
+out.push('ALL INTEGRATION CHECKS PASSED');document.getElementById('results').textContent=out.join('\n');
+})().catch(err=>{document.getElementById('results').textContent+='\nERROR '+err.stack;});
+</script></html>

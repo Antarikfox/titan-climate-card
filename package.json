@@ -1,0 +1,11 @@
+{
+  "name": "titan-climate-card",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TITAN HATCH climate card for Home Assistant by Antarikfox",
+  "scripts": {
+    "test": "node --test tests/logic.test.mjs",
+    "build": "python3 build.py"
+  },
+  "license": "MIT"
+}
