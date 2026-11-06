@@ -1,0 +1,59 @@
+name: Validate and release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests and reproducible build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm test
+      - run: python3 build.py
+      - run: git diff --exit-code -- titan-climate-card.js titan-climate-card.js.txt index.html TITAN-Climate-Demo.html
+
+  validate-hacs:
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate dashboard plugin
+        uses: hacs/action@main
+        with:
+          category: plugin
+          comment: false
+
+  release:
+    name: Publish validated release
+    needs: [test, validate-hacs]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Publish version if it does not exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v$(node -p "require('./package.json').version")"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; keeping it unchanged."
+            exit 0
+          fi
+          gh release create "$tag" titan-climate-card.js titan-climate-card.js.txt TITAN-Climate-Demo.html --target "$GITHUB_SHA" --title "TITAN HATCH $tag" --notes-file RELEASE-NOTES.md --latest
