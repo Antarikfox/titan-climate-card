@@ -4,7 +4,9 @@ A white matte MECHA climate instrument for Home Assistant. Temperature and humid
 
 **by Antarikfox** · [Русский](README.md) | **English** · [Full guide](START-TITAN-EN.txt) · [Interactive demo](index.html) · [Download standalone demo](TITAN-Climate-Demo.html)
 
-![TITAN HATCH transparent armor](assets/titan-backplate.webp)
+![TITAN HATCH with simulated temperature, humidity and history graphs](https://raw.githubusercontent.com/Antarikfox/titan-climate-card/main/assets/titan-demo-preview.webp)
+
+*Simulated readings: 23.4 °C, 48% humidity and 24-hour history. In Home Assistant, the card displays your own sensor data.*
 
 ## Features
 
