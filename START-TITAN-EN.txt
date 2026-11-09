@@ -1,0 +1,186 @@
+TITAN HATCH / MECHA Climate Card v1.0
+by Antarikfox
+
+English: START-TITAN-EN.txt | Русский: START-TITAN.txt
+
+A temperature and humidity card for Home Assistant.
+White matte housing, translucent armor and two built-in displays.
+All artwork is embedded in the JS file. No separate images are required.
+
+QUICK PREVIEW
+
+Open TITAN-Climate-Demo.html in a browser. It works offline.
+The demo uses simulated readings and history, labeled on screen.
+Use the controls on the right to change temperature, humidity, background
+and body transparency, LED brightness, animation mode and backdrop.
+
+INSTALL WITH HACS (RECOMMENDED)
+
+TITAN HATCH Climate Card is included in the default HACS catalog.
+
+1. Open HACS in Home Assistant and search for TITAN HATCH Climate Card or TITAN.
+2. Open the repository entry and select Download.
+3. Reload the Home Assistant page.
+4. Add the card through the dashboard editor or YAML:
+   type: custom:titan-climate-card
+5. Select your temperature and humidity sensors.
+
+If the resource was not registered automatically:
+Settings → Dashboards → ⋮ → Resources.
+URL: /hacsfiles/titan-climate-card/titan-climate-card.js
+Type: JavaScript module.
+If Resources is hidden, enable Advanced mode in your HA profile.
+
+If HACS search does not show the card yet, use the fallback:
+⋮ → Custom repositories.
+URL: https://github.com/Antarikfox/titan-climate-card
+Type: Dashboard. Then download the card.
+
+MANUAL INSTALLATION (WITHOUT HACS)
+
+1. Download titan-climate-card.js.txt and remove the final .txt extension.
+   The filename must be titan-climate-card.js.
+2. Copy it into /config/www/ in Home Assistant.
+   Create the www directory if it does not exist.
+3. Open Settings → Dashboards → ⋮ → Resources.
+   If Resources is hidden, enable Advanced mode in your HA profile.
+4. Add this resource:
+   URL: /local/titan-climate-card.js?v=1.0.0
+   Type: JavaScript module.
+5. Reload the page and clear the browser cache (Windows: Ctrl+F5).
+6. Add a manual card and paste the YAML below, or select
+   "TITAN · MECHA Climate" from the card list.
+
+Minimal configuration:
+
+type: custom:titan-climate-card
+name: Living room
+temperature_entity: sensor.living_room_temperature
+humidity_entity: sensor.living_room_humidity
+background_opacity: 0
+body_opacity: 1
+leds_enabled: true
+led_brightness: 0.7
+animations: full
+
+Replace the entity IDs with your own. These are examples.
+You can select temperature and humidity sensors in the visual editor.
+
+OPACITY
+
+background_opacity: 0
+  Background opacity: 0 means fully transparent around the housing.
+  0.3 adds a subtle dark backdrop; 1 adds an opaque dark square.
+
+body_opacity: 1
+  Artwork opacity: 1 is normal, 0.6 is translucent, 0 hides the housing.
+  Readings and graphs remain visible.
+
+background_blur: 0
+  Background blur, 0–30 px. Disabled by default.
+
+These settings are available in the Home Assistant visual editor.
+Opacity fields use 0 for transparent.
+The demo's transparency sliders show the inverse value as a percentage.
+
+LEDS AND ANIMATIONS
+
+leds_enabled: true
+  Enables live LED layers and a subtle amber core pulse.
+  false disables these effects. Painted reflections and highlights remain.
+
+led_brightness: 0.7
+  Live LED brightness, from 0 to 1.
+
+animations: full
+  full: occasional asynchronous LED blinks, a subtle amber core pulse
+        and smooth graph transitions.
+  reduced: steady lighting without blinking or pulsing;
+           smooth graph transitions remain.
+  off: disables animations and smooth graph transitions.
+
+LEDs use different intervals of approximately 10–19 seconds.
+The lighting changes are brief and gentle.
+The system's reduced-motion preference is respected automatically.
+Decorative animations pause off-screen and in inactive browser tabs.
+
+READINGS AND GRAPHS
+
+precision: 1              # 0, 1 or 2 decimal places
+show_sparkline: true      # 24-hour history
+show_last_updated: true
+accent: '#7ee9f4'         # temperature graph and icon accent color
+
+Graphs use real timestamps and monotone cubic interpolation without
+artificial peaks. Lines transition to updated positions over 1.4 seconds.
+
+History is requested from Recorder through hass.callApi every five minutes.
+Live readings are added between requests. Unavailable / unknown gaps are
+not filled with invented history. If history is missing or Recorder is
+disabled, current readings remain visible with a no-history message.
+
+Hover over a graph to inspect time, value and the daily min/max.
+Tap a reading or graph to open the corresponding entity in HA.
+Hold and double-tap actions can be configured using hold_action and
+double_tap_action. Supported actions: more-info, navigate, url (http/https),
+call-service, perform-action and none.
+
+Optional battery sensor:
+battery_entity: sensor.living_room_battery
+The battery indicator is hidden when no battery entity is configured.
+
+Temperature readings can use °C or °F. Status thresholds are specified in °C.
+
+Set thresholds in the visual editor or YAML:
+
+thresholds:
+  temperature:
+    cold: 16
+    cool: 19
+    comfort_max: 24
+    warm_max: 28
+  humidity:
+    dry: 30
+    low: 45
+    optimum_max: 60
+    high: 75
+
+Thresholds within each group must be in ascending order.
+
+SIZE
+
+The card is square, with the irregular round housing filling most of it.
+A width of at least 390 px is recommended. A full section works well on tablets.
+Adjust width through the Layout tab of the Home Assistant card editor.
+
+VALIDATION
+
+Automated logic tests and a browser simulation of Home Assistant cover
+readings and °F, history loading, data gaps, interactions, signal loss and
+recovery, opacity, LEDs, the editor and narrow layouts.
+Simulated checks do not replace testing with your own sensors after installation.
+
+TITAN is a separate card and can run alongside XENO-POD.
+Installation and updates are available through HACS.
+
+UPDATES AND SWITCHING TO HACS
+
+HACS: download the available update and reload the Home Assistant page.
+Manual: replace the JS file, change the ?v= resource parameter and clear cache.
+When switching from a manual installation to HACS, remove the old
+/local/titan-climate-card.js resource. Do not load the card through both
+/local/ and /hacsfiles/. You can keep the card's YAML configuration.
+
+TROUBLESHOOTING
+
+— "Custom element doesn't exist": check the resource URL, JavaScript module
+  type and .js extension, then clear the browser cache.
+— Open the resource URL on your HA instance:
+  /hacsfiles/titan-climate-card/titan-climate-card.js for HACS, or
+  /local/titan-climate-card.js for a manual installation.
+  It should return JavaScript code, not a 404 page.
+— Signal lost: check entity IDs and sensor states.
+— No history: check Recorder and whether it has records for the last day.
+— After a manual file update, change the ?v= value and clear the cache.
+
+Code license: MIT. by Antarikfox.

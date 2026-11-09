@@ -2,7 +2,7 @@
 
 A white matte MECHA climate instrument for Home Assistant. Temperature and humidity, smooth history graphs, a transparent background and softly blinking LEDs.
 
-**by Antarikfox** · [Русская инструкция](START-TITAN.txt) · [Interactive demo](index.html) · [Download standalone demo](TITAN-Climate-Demo.html)
+**by Antarikfox** · **Русский** | [English](README.en.md) · [Полная инструкция](START-TITAN.txt) · [Interactive demo](index.html) · [Download standalone demo](TITAN-Climate-Demo.html)
 
 ![TITAN HATCH transparent armor](assets/titan-backplate.webp)
 
@@ -23,18 +23,26 @@ A white matte MECHA climate instrument for Home Assistant. Temperature and humid
 
 ## Установка через HACS
 
-Репозиторий подготовлен для добавления как пользовательская карточка; в каталог HACS по умолчанию он не включён.
+TITAN HATCH Climate Card включена в основной каталог HACS.
 
-1. В HACS открой меню **Пользовательские репозитории / Custom repositories**.
-2. Добавь URL этого репозитория. Категория — **Dashboard / Панель**.
-3. Скачай **TITAN HATCH Climate Card** и обнови страницу.
-4. Если ресурс не появился автоматически, добавь ресурс типа **JavaScript module**:
+1. Открой HACS в Home Assistant и найди **TITAN HATCH Climate Card** (можно искать `TITAN`).
+2. Открой карточку репозитория и нажми **Скачать / Download**.
+3. После установки перезагрузи страницу Home Assistant.
+4. Добавь карточку через редактор панели или YAML: `type: custom:titan-climate-card`.
+5. Выбери свои датчики температуры и влажности.
 
-   ```text
-   /hacsfiles/titan-climate-card/titan-climate-card.js
-   ```
+Если ресурс не появился автоматически, открой **Настройки → Панели управления → ⋮ → Ресурсы** и добавь ресурс типа **Модуль JavaScript**:
 
-Затем добавь карточку `custom:titan-climate-card`.
+```text
+/hacsfiles/titan-climate-card/titan-climate-card.js
+```
+
+Если пункт «Ресурсы» скрыт, включи расширенный режим в профиле Home Assistant.
+Не добавляй один и тот же файл одновременно через `/local/` и `/hacsfiles/`.
+
+### Запасной способ: пользовательский репозиторий
+
+Если поиск HACS пока не показывает карточку, открой **⋮ → Пользовательские репозитории / Custom repositories**, добавь `https://github.com/Antarikfox/titan-climate-card` с типом **Панель / Dashboard**, затем скачай карточку.
 
 ## Ручная установка
 
@@ -48,6 +56,12 @@ A white matte MECHA climate instrument for Home Assistant. Temperature and humid
 3. Обнови страницу с очисткой кеша.
 
 Для планшета есть [`titan-climate-card.js.txt`](titan-climate-card.js.txt). После скачивания убери только окончание `.txt`.
+
+## Обновление
+
+При установке через HACS скачай доступное обновление в HACS и перезагрузи страницу Home Assistant.
+При ручной установке замени JS-файл и измени параметр `?v=` в URL ресурса, затем очисти кеш.
+Если карточка уже установлена вручную и ты переходишь на HACS, убери старый ресурс `/local/titan-climate-card.js`, чтобы файл загружался только один раз.
 
 ## Карточка
 
