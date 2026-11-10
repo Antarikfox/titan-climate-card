@@ -1,6 +1,6 @@
 {
   "name": "titan-climate-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "TITAN HATCH climate card for Home Assistant by Antarikfox",
   "scripts": {
