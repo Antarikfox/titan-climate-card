@@ -1,5 +1,16 @@
 # TITAN HATCH · Climate Card
 
+![TITAN HATCH — Antarikfox Design Lab promotional banner](docs/design-lab-banner.svg)
+
+[![HACS Default](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/default/blob/master/plugin)
+[![Latest release](https://img.shields.io/github/v/release/Antarikfox/titan-climate-card?label=release&color=ef9c46)](https://github.com/Antarikfox/titan-climate-card/releases/latest)
+[![GitHub stars](https://img.shields.io/github/stars/Antarikfox/titan-climate-card?style=flat&color=efb34d)](https://github.com/Antarikfox/titan-climate-card/stargazers)
+[![Release asset downloads](https://img.shields.io/github/downloads/Antarikfox/titan-climate-card/total?label=release%20downloads&color=29a8ac)](https://github.com/Antarikfox/titan-climate-card/releases)
+
+[![Open in HACS via My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Antarikfox&repository=titan-climate-card&category=plugin)
+
+<sub>Download counts refer to GitHub release assets, not unique HACS installs.</sub>
+
 Климатическая карточка для Home Assistant: температура, влажность и плавные графики за сутки в матовом MECHA-корпусе с живой подсветкой.
 
 A MECHA climate card for Home Assistant: temperature, humidity and smooth 24-hour history graphs, with a matte housing and softly animated LEDs.
@@ -11,6 +22,12 @@ A MECHA climate card for Home Assistant: temperature, humidity and smooth 24-hou
 *Превью с демонстрационными данными: 23,4 °C, влажность 48%, история за сутки. В Home Assistant карточка показывает данные твоих датчиков.*
 
 *Preview with simulated readings: 23.4 °C, 48% humidity and 24-hour history. In Home Assistant, the card displays your own sensor data.*
+
+## TITAN HATCH in motion
+
+![TITAN HATCH animated design tour](docs/design-lab-tour.svg)
+
+*12-second animated design tour, using the existing project preview with simulated readings. Not a recording of live card behavior.* [Open the animation](docs/design-lab-tour.svg) if the embedded preview is static.
 
 ## Русский
 
@@ -288,3 +305,16 @@ MIT for the code. Artwork generated for this project. **by Antarikfox**.
 ## Корпус / Housing artwork
 
 ![TITAN HATCH — графика корпуса без показаний / housing artwork without readouts](https://raw.githubusercontent.com/Antarikfox/titan-climate-card/main/assets/titan-backplate.webp)
+
+## Antarikfox Design Lab 🦊
+
+Independent Home Assistant community projects by Antarikfox. All four repositories are listed in the default HACS catalog.
+
+| Project | What it does |
+| --- | --- |
+| [Antarikfox Studio](https://github.com/Antarikfox/Antarikfox-HA-card-Studio) | Visual dashboard and glass card designer |
+| [OBSIDIAN-6](https://github.com/Antarikfox/obsidian-6-card) | Six-tube biomechanical Nixie clock |
+| [CHRONO / 03 BIO](https://github.com/Antarikfox/antarikfox-chrono-bio-clock) | Mecha clock with amber digits and moss |
+| **TITAN HATCH (this project)** | Climate telemetry and 24-hour graphs |
+
+[Explore Antarikfox on GitHub](https://github.com/Antarikfox) · [HACS default catalog](https://github.com/hacs/default/blob/master/plugin)
